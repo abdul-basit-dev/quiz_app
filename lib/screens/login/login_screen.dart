@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quiz_app/components/default_button.dart';
 import 'package:my_quiz_app/constants.dart';
 import 'package:my_quiz_app/helper/keyboard.dart';
+import 'package:my_quiz_app/screens/home/home_screen.dart';
 import 'package:my_quiz_app/screens/signup/signup_screen.dart';
 import 'package:my_quiz_app/size_config.dart';
 
@@ -21,6 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email, password;
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkAuthentication();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,10 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: getProportionateScreenHeight(16)),
               DefaultButton(
                 press: () {
-                  if (_formKey.currentState!.validate()) {
-                    KeyboardUtil.hideKeyboard(context);
-                    //TODO:SIGNUP
-                  }
+                  loginwithFirebase();
                 },
                 text: 'Login',
               ),
@@ -90,6 +97,48 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  checkAuthentication() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+        Navigator.pushNamedAndRemoveUntil(
+            context, HomeScreen.routeName, (Route route) => false);
+      }
+    });
+  }
+
+  loginwithFirebase() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      KeyboardUtil.hideKeyboard(context);
+      try {
+        final credential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailCtrl.text,
+          password: passwordCtrl.text,
+        );
+        if (credential != null) {
+          gotToHomeScreen();
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+    } else {
+      print('Error');
+    }
+  }
+
+  gotToHomeScreen() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, HomeScreen.routeName, (Route route) => false);
   }
 
   TextFormField buildEmailField() {

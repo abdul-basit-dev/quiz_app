@@ -125,12 +125,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   signupwithFirebase() async {
     try {
-      final credential =
+      final UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailCtrl.text,
         password: passCtrl.text,
       );
       if (credential != null) {
+        fireBaseuser = credential.user;
+        await fireBaseuser!.reload();
+        fireBaseuser = _auth.currentUser;
         saveUserToFirebase();
       }
     } on FirebaseAuthException catch (e) {
@@ -152,14 +155,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
       var pushId = userRefernece.push();
 
       UserModel userModel = UserModel.withId(
-          pushId.key.toString(),
+          fireBaseuser!.uid,
           firstNameCtrl.text,
           lastNameCtrl.text,
           phoneCtrl.text,
           emailCtrl.text,
           passCtrl.text);
 
-      await userRefernece.child(pushId.key.toString()).set(userModel.toJson());
+      await userRefernece
+          .child(fireBaseuser!.uid.toString())
+          .set(userModel.toJson())
+          .then(
+        (value) {
+          setState(() {
+            firstNameCtrl.text = '';
+          });
+          Navigator.pushNamed(context, LoginScreen.routeName);
+        },
+      );
     }
   }
 
