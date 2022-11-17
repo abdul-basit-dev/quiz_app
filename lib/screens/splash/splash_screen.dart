@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_quiz_app/helper/config.dart';
 import 'package:my_quiz_app/screens/home/home_screen.dart';
 import 'package:my_quiz_app/screens/login/login_screen.dart';
 import 'package:my_quiz_app/size_config.dart';
@@ -42,8 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       } else {
         print('User is signed in!');
-        Navigator.pushNamedAndRemoveUntil(
-            context, HomeScreen.routeName, (Route route) => false);
+        if (box!.get('login') == true) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, (Route route) => false);
+        }
       }
     });
   }

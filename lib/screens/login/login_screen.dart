@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quiz_app/components/default_button.dart';
 import 'package:my_quiz_app/constants.dart';
+import 'package:my_quiz_app/helper/config.dart';
 import 'package:my_quiz_app/helper/keyboard.dart';
 import 'package:my_quiz_app/screens/home/home_screen.dart';
 import 'package:my_quiz_app/screens/signup/signup_screen.dart';
@@ -23,10 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email, password;
 
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     checkAuthentication();
   }
@@ -105,8 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
         print('User is currently signed out!');
       } else {
         print('User is signed in!');
-        Navigator.pushNamedAndRemoveUntil(
-            context, HomeScreen.routeName, (Route route) => false);
+        if (box!.get('login') == true) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeScreen.routeName, (Route route) => false);
+        }
       }
     });
   }
@@ -121,7 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
           email: emailCtrl.text,
           password: passwordCtrl.text,
         );
-        if (credential != null) {
+        User? user = credential.user;
+        user = _auth.currentUser;
+        if (user != null) {
+          box!.put('login', true);
           gotToHomeScreen();
         }
       } on FirebaseAuthException catch (e) {
