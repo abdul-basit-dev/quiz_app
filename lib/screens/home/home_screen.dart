@@ -8,6 +8,9 @@ import 'package:my_quiz_app/helper/config.dart';
 import 'package:my_quiz_app/models/user_model.dart';
 import 'package:my_quiz_app/screens/login/login_screen.dart';
 
+import '../../components/custom_nav_bar.dart';
+import '../../enums.dart';
+
 class HomeScreen extends StatefulWidget {
   static String routeName = "/home";
 
@@ -65,6 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: isLoading == true ? CircularProgressIndicator() : Container(),
+      bottomNavigationBar: const CustomBottomNavBar(
+        selectedMenu: MenuState.home,
+      ),
     );
   }
 
@@ -92,12 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
               String phone = userData[x]['phone'];
               String email = userData[x]['email'];
               //Adding data to Hive
-              box!.put("firstName", userData[x]['firstName']);
-              box!.put("lastName", userData[x]['lastName']);
+              box!.put("firstName", firstName);
+              box!.put("lastName", lastName);
               box!.put("phone", userData[x]['phone']);
-              box!.put("photourl", userData[x]['photourl']);
-              box!.put("user_adress", userData[x]['address']);
-              box!.put("user_type", userData[x]['userType']);
+              //TODO:
+              box!.put("photourl", userData[x]['empty']);
               box!.put("email", email);
 
               userModel.add(UserModel.withId(

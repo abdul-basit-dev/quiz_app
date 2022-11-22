@@ -27,6 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? firstName;
   String? lastName;
   String? phone;
+
   bool remember = false;
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController firstNameCtrl = TextEditingController();
@@ -309,7 +310,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         labelStyle: const TextStyle(color: kPrimaryColor),
         focusColor: kPrimaryColor,
-        hintText: "Post Code",
+        hintText: "Phone Number",
         fillColor: kFormColor,
         filled: true,
       ),
