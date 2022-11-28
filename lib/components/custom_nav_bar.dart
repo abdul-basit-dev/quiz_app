@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_quiz_app/enums.dart';
 import 'package:my_quiz_app/screens/home/home_screen.dart';
-import 'package:my_quiz_app/screens/home/quiz_history/quiz_history.dart';
+import 'package:my_quiz_app/screens/quiz_history/quiz_history.dart';
 import 'package:my_quiz_app/screens/profile/profile_screen.dart';
 
 import '../constants.dart';

@@ -8,7 +8,7 @@ import '../../constants.dart';
 import '../../enums.dart';
 import '../../helper/config.dart';
 import '../../models/user_model.dart';
-import '../home/edit_profile/edit_profile_screen.dart';
+import '../edit_profile/edit_profile_screen.dart';
 
 //import 'components/body.dart';
 
